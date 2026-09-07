@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deivid Nascimento — Desenvolvedor FullStack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12141c;
+    --bg-panel: #191c27;
+    --bg-panel-2: #1f2330;
+    --border: #2b2f40;
+    --text: #e7e9f2;
+    --text-dim: #8b90a6;
+    --accent: #f5a623;
+    --accent-2: #5ec8b8;
+    --red-dot: #ec6a5e;
+    --yellow-dot: #f4bf4f;
+    --green-dot: #61c454;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--accent); color: #12141c; }
+
+  h1,h2,h3, .mono{
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  .wrap{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: rgba(18,20,28,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .wrap{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .brand{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .brand span{ color: var(--accent); }
+  .nav-links{
+    display:flex;
+    gap: 28px;
+    font-size: 0.92rem;
+    color: var(--text-dim);
+  }
+  .nav-links a:hover{ color: var(--accent-2); }
+
+  @media (max-width: 620px){
+    .nav-links{ gap: 16px; font-size: 0.82rem; }
+  }
+
+  /* ---------- WINDOW CHROME ---------- */
+  .window{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+  .window-bar{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-panel-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .dot{ width:11px; height:11px; border-radius:50%; }
+  .dot.red{ background: var(--red-dot); }
+  .dot.yellow{ background: var(--yellow-dot); }
+  .dot.green{ background: var(--green-dot); }
+  .window-title{
+    margin-left: 8px;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .window-body{ padding: 28px 28px 32px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    padding-top: 90px;
+    padding-bottom: 60px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    width:100%;
+  }
+  .terminal-line{
+    font-family:'JetBrains Mono', monospace;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    white-space: pre-wrap;
+    margin-bottom: 6px;
+    color: var(--text-dim);
+  }
+  .terminal-line .prompt{ color: var(--accent-2); }
+  .terminal-line .out{ color: var(--text); font-weight: 500; }
+  .terminal-line .big{
+    font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+    font-weight: 800;
+    color: var(--text);
+    display:block;
+    margin: 4px 0 2px;
+  }
+  .cursor{
+    display:inline-block;
+    width: 9px; height: 1.1em;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .typed-wrap{ min-height: 210px; }
+
+  .cta-row{
+    display:flex;
+    gap: 14px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    padding: 12px 22px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    display:inline-block;
+  }
+  .btn-solid{
+    background: var(--accent);
+    color: #16181f;
+    font-weight: 700;
+    border-color: var(--accent);
+  }
+  .btn-solid:hover{ transform: translateY(-2px); }
+  .btn-ghost{ color: var(--text); }
+  .btn-ghost:hover{ border-color: var(--accent-2); color: var(--accent-2); transform: translateY(-2px); }
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{ padding: 90px 0; border-top: 1px solid var(--border); }
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .sec-num{ color: var(--accent); font-family:'JetBrains Mono', monospace; font-size: 0.95rem; }
+  .sec-head h2{ font-size: 1.5rem; font-weight: 700; }
+
+  /* ---------- ABOUT ---------- */
+  .about-text p{ color: var(--text-dim); margin-bottom: 14px; max-width: 68ch; }
+  .about-text strong{ color: var(--text); font-weight: 600; }
+  .comment{ color: var(--accent-2); font-family:'JetBrains Mono', monospace; font-size: 0.85rem; margin-bottom: 14px; }
+
+  /* ---------- SKILLS ---------- */
+  .skills-panel{ }
+  .skill-row{ margin-bottom: 20px; }
+  .skill-row:last-child{ margin-bottom: 0; }
+  .skill-label{
+    display:flex;
+    justify-content: space-between;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .skill-label .pct{ color: var(--text-dim); }
+  .bar-track{
+    height: 8px;
+    background: var(--bg-panel-2);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .bar-fill{
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+    transition: width 1.1s cubic-bezier(.2,.8,.2,1);
+  }
+
+  /* ---------- PROJECTS ---------- */
+  .tabs{
+    display:flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-panel-2);
+    overflow-x: auto;
+  }
+  .tab{
+    padding: 12px 18px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    background: transparent;
+    border-top: none; border-left:none; border-bottom:none;
+  }
+  .tab.active{ color: var(--text); background: var(--bg-panel); }
+  .tab.active::after{
+    content:"";
+    position:absolute; left:0; right:0; top:0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .tab .dot-status{
+    display:inline-block; width:6px; height:6px; border-radius:50%;
+    margin-right: 7px;
+    background: var(--accent-2);
+  }
+  .tab.wip .dot-status{ background: var(--yellow-dot); }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .proj-desc{ color: var(--text-dim); margin-bottom: 18px; max-width: 60ch; }
+  .badge-row{ display:flex; gap:8px; flex-wrap: wrap; margin-bottom: 22px; }
+  .badge{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 4px 9px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent-2);
+  }
+
+  /* calculator */
+  .calc{
+    width: 260px;
+    max-width: 100%;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .calc-display{
+    background: #0e1017;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 14px;
+    text-align: right;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 1.7rem;
+    color: var(--text);
+    margin-bottom: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .calc-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .calc-grid button{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 1rem;
+    padding: 12px 0;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    color: var(--text);
+    cursor: pointer;
+    transition: transform .1s ease, background .15s ease;
+  }
+  .calc-grid button:hover{ background: #262a3a; transform: translateY(-1px); }
+  .calc-grid button.op{ color: var(--accent); }
+  .calc-grid button.eq{ background: var(--accent); color:#16181f; font-weight:700; border-color: var(--accent); }
+  .calc-grid button.zero{ grid-column: span 2; }
+  .calc-grid button.clear{ color: var(--red-dot); }
+
+  .wip-box{
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    color: var(--text-dim);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+  .wip-box .blink{ animation: blink 1s steps(1) infinite; color: var(--accent); }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  footer{
+    padding: 70px 0 50px;
+    border-top: 1px solid var(--border);
+  }
+  .contact-line{ font-family:'JetBrains Mono', monospace; color: var(--text-dim); margin-bottom: 18px; }
+  .contact-line .prompt{ color: var(--accent-2); }
+  .foot-links{ display:flex; gap: 20px; flex-wrap: wrap; margin-top: 4px; }
+  .foot-links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 9px 16px;
+    border-radius: 6px;
+  }
+  .foot-links a:hover{ border-color: var(--accent-2); color: var(--accent-2); }
+  .foot-note{ margin-top: 30px; color: var(--text-dim); font-size: 0.8rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+    html{ scroll-behavior: auto; }
+  }
+
+  /* reveal on scroll (single, simple) */
+  .reveal{ opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">deivid<span>.dev</span></div>
+    <div class="nav-links">
+      <a href="#sobre">sobre</a>
+      <a href="#skills">skills</a>
+      <a href="#projetos">projetos</a>
+      <a href="#contato">contato</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="window">
+      <div class="window-bar">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="window-title">deivid@portfolio: ~</span>
+      </div>
+      <div class="window-body">
+        <div class="typed-wrap" id="typed"></div>
+        <div class="cta-row">
+          <a href="#projetos" class="btn btn-solid">ver projetos</a>
+          <a href="#contato" class="btn btn-ghost">falar comigo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">01</span>
+      <h2>sobre mim</h2>
+    </div>
+    <div class="about-text reveal">
+      <div class="comment">/* quem escreveu esse código */</div>
+      <p>Me chamo <strong>Deivid Nascimento</strong>, tenho 20 anos e sou desenvolvedor em formação. Concluí o Ensino Médio na <strong>EE Alexandrina Bassith</strong>, com curso técnico em TI — foi ali que construí minha primeira base sólida em lógica de programação e infraestrutura de computadores.</p>
+      <p>Hoje curso <strong>TI na Faculdade Anhanguera</strong>, aprofundando meus conhecimentos em desenvolvimento de software. Sou apaixonado por tecnologia e estou sempre buscando aprender novas ferramentas e frameworks para me tornar um desenvolvedor completo.</p>
+      <p>Gosto de resolver problemas através do código e de entender como as coisas funcionam por trás das telas. No momento, estou focado em evoluir como desenvolvedor <strong>FullStack</strong>, unindo front-end e back-end em projetos práticos.</p>
+      <p>Estou sempre aberto a trocar ideias, aprender com outros desenvolvedores e colaborar em projetos. Sinta-se à vontade para conferir o que venho construindo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">02</span>
+      <h2>tecnologias</h2>
+    </div>
+    <div class="window reveal">
+      <div class="window-bar">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="window-title">tecnologias.json</span>
+      </div>
+      <div class="window-body skills-panel" id="skillsPanel">
+        <div class="skill-row" data-level="85">
+          <div class="skill-label"><span>HTML</span><span class="pct">85%</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+        <div class="skill-row" data-level="55">
+          <div class="skill-label"><span>CSS</span><span class="pct">55%</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+        <div class="skill-row" data-level="60">
+          <div class="skill-label"><span>JavaScript</span><span class="pct">60%</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+        <div class="skill-row" data-level="45">
+          <div class="skill-label"><span>PHP</span><span class="pct">45%</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+        <div class="skill-row" data-level="30">
+          <div class="skill-label"><span>Python</span><span class="pct">30%</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+        <div class="skill-row" data-level="25">
+          <div class="skill-label"><span>Java</span><span class="pct">25%</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">03</span>
+      <h2>projetos</h2>
+    </div>
+
+    <div class="window reveal">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-panel="calc"><span class="dot-status"></span>calculadora.js</button>
+        <button class="tab wip" data-panel="p2"><span class="dot-status"></span>projeto-2.js</button>
+        <button class="tab wip" data-panel="p3"><span class="dot-status"></span>projeto-3.js</button>
+      </div>
+      <div class="window-body">
+
+        <div class="panel active" id="panel-calc">
+          <p class="proj-desc">Uma calculadora funcional, construída em HTML, CSS e JavaScript puro. Testa aí embaixo — os botões funcionam de verdade.</p>
+          <div class="badge-row">
+            <span class="badge">HTML</span>
+            <span class="badge">CSS</span>
+            <span class="badge">JavaScript</span>
+          </div>
+          <div class="calc">
+            <div class="calc-display" id="calcDisplay">0</div>
+            <div class="calc-grid">
+              <button class="clear" data-action="clear">C</button>
+              <button class="op" data-action="del">⌫</button>
+              <button class="op" data-value="%">%</button>
+              <button class="op" data-value="/">÷</button>
+
+              <button data-value="7">7</button>
+              <button data-value="8">8</button>
+              <button data-value="9">9</button>
+              <button class="op" data-value="*">×</button>
+
+              <button data-value="4">4</button>
+              <button data-value="5">5</button>
+              <button data-value="6">6</button>
+              <button class="op" data-value="-">−</button>
+
+              <button data-value="1">1</button>
+              <button data-value="2">2</button>
+              <button data-value="3">3</button>
+              <button class="op" data-value="+">+</button>
+
+              <button class="zero" data-value="0">0</button>
+              <button data-value=".">.</button>
+              <button class="eq" data-action="equals">=</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" id="panel-p2">
+          <p class="proj-desc">Esse projeto ainda está sendo construído. Assim que estiver pronto, ele aparece aqui com descrição, tecnologias usadas e link do repositório.</p>
+          <div class="wip-box">status: em desenvolvimento<span class="blink">_</span></div>
+        </div>
+
+        <div class="panel" id="panel-p3">
+          <p class="proj-desc">Mais um projeto no forno. Estou usando esse espaço pra treinar ideias novas antes de publicar no GitHub.</p>
+          <div class="wip-box">status: em desenvolvimento<span class="blink">_</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<footer id="contato">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">04</span>
+      <h2>contato</h2>
+    </div>
+    <div class="reveal">
+      <div class="contact-line"><span class="prompt">$</span> ./falar-com-deivid.sh</div>
+      <div class="foot-links">
+        <a href="https://github.com/Deivid-Nascimento" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <div class="foot-note">mais canais de contato em breve</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Hero typing animation (single orchestrated moment) ----
+  const lines = [
+    { prompt: "$ whoami", out: null },
+    { prompt: null, out: "Deivid Nascimento", big: true },
+    { prompt: "$ cat cargo-atual.txt", out: null },
+    { prompt: null, out: "Desenvolvedor FullStack em formação" },
+  ];
+
+  const typedEl = document.getElementById('typed');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function renderStatic(){
+    typedEl.innerHTML = `
+      <div class="terminal-line"><span class="prompt">$ whoami</span></div>
+      <div class="terminal-line"><span class="out big">Deivid Nascimento</span></div>
+      <div class="terminal-line"><span class="prompt">$ cat cargo-atual.txt</span></div>
+      <div class="terminal-line"><span class="out">Desenvolvedor FullStack em formação</span></div>
+    `;
+  }
+
+  if(reduceMotion){
+    renderStatic();
+  } else {
+    let li = 0;
+    function typeLine(){
+      if(li >= lines.length){
+        typedEl.insertAdjacentHTML('beforeend', `<span class="cursor"></span>`);
+        return;
+      }
+      const line = lines[li];
+      const div = document.createElement('div');
+      div.className = 'terminal-line';
+      typedEl.appendChild(div);
+      const fullText = line.prompt || line.out;
+      const cls = line.prompt ? 'prompt' : (line.big ? 'out big' : 'out');
+      const span = document.createElement('span');
+      span.className = cls;
+      div.appendChild(span);
+      let ci = 0;
+      const speed = line.big ? 45 : 22;
+      const timer = setInterval(() => {
+        span.textContent = fullText.slice(0, ci+1);
+        ci++;
+        if(ci >= fullText.length){
+          clearInterval(timer);
+          li++;
+          setTimeout(typeLine, 180);
+        }
+      }, speed);
+    }
+    typeLine();
+  }
+
+  // ---- Skill bars: fill on scroll into view ----
+  const skillRows = document.querySelectorAll('.skill-row');
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const level = entry.target.getAttribute('data-level');
+        entry.target.querySelector('.bar-fill').style.width = level + '%';
+        skillObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  skillRows.forEach(row => skillObserver.observe(row));
+
+  // ---- Reveal sections on scroll ----
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => revealObserver.observe(el));
+
+  // ---- Project tabs ----
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+    });
+  });
+
+  // ---- Calculator logic ----
+  const display = document.getElementById('calcDisplay');
+  let expression = '';
+
+  function updateDisplay(){
+    display.textContent = expression === '' ? '0' : expression;
+  }
+
+  document.querySelectorAll('.calc-grid button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      const value = btn.dataset.value;
+
+      if(action === 'clear'){
+        expression = '';
+      } else if(action === 'del'){
+        expression = expression.slice(0, -1);
+      } else if(action === 'equals'){
+        try{
+          const safe = expression.replace(/[^0-9+\-*/.%()]/g, '');
+          if(safe.length){
+            const result = Function('"use strict"; return (' + safe + ')')();
+            expression = String(Number.isFinite(result) ? +result.toFixed(8) : 'Erro');
+          }
+        }catch(e){
+          expression = 'Erro';
+        }
+      } else if(value !== undefined){
+        expression += value;
+      }
+      updateDisplay();
+    });
+  });
+</script>
+
+</body>
+</html>
